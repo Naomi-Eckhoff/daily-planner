@@ -81,3 +81,7 @@ textarea{
 .scheduled-activity {
   background-color:chocolate;
 }
+
+.overdue *{
+  background-color:grey;
+}

@@ -7,7 +7,7 @@ for (var i = 9; i < 18; i++) {
   var timeLi = $("<li>").addClass("schedule-list");
   var timeDivLeft = $("<div>").addClass("time-static");
   var timePLeft = $("<p>")
-    .addClass("time-static-p")
+    .addClass("time-static-p static-time-" + i)
     .text(i + ":00");
   if (i === 9) {
     var timePLeft = $("<p>")
@@ -17,8 +17,6 @@ for (var i = 9; i < 18; i++) {
   var timePRight = $("<p>")
     .addClass("m-1")
     .text("aaaaa");
-
-
   timeDivLeft.append(timePLeft);
   timeDivRight.append(timePRight);
   // append span and p element to parent li
@@ -28,4 +26,16 @@ for (var i = 9; i < 18; i++) {
   $(".time-list").append(timeLi);
 }
 
+function timeCheck() {
+  $(".schedule-list").each(function () {
+    if ($(".time-static-p") < moment().format("HH") + ":" + moment().format("mm")) {
+      $(".schedule-list").addClass("overdue");
+    }
+    setInterval(function () {
+      timeCheck();
+    }, 1800000);
+  });
+};
+
+timeCheck();
 
