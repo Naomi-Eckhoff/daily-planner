@@ -44,17 +44,17 @@ textarea{
 
 .past {
   background-color: #d3d3d3;
-  color: white;
+  color: black;
 }
 
 .present {
   background-color: #ff6961;
-  color: white;
+  color: black;
 }
 
 .future {
   background-color: #77dd77;
-  color: white;
+  color: black;
 }
 
 .saveBtn {
@@ -70,18 +70,4 @@ textarea{
   transition: all .3s ease-in-out;
 }
 
-.schedule-list {
-  display: flex;
-}
 
-.time-static {
-  background-color: blueviolet;
-}
-
-.scheduled-activity {
-  background-color:chocolate;
-}
-
-.overdue *{
-  background-color:grey;
-}
