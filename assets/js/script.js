@@ -4,14 +4,16 @@ var today = moment().format("dddd") + ", " + moment().format("MMMM") + " " + mom
 document.getElementById("currentDay").textContent = today;
 
 for (var i = 9; i < 18; i++) {
-  // create elements that make up time slots
+  //creates elements that make up time slots
   var timeLi = $("<li>").addClass("schedule-list row");
   var timeDivLeft = $("<div>").addClass("time-static hour");
   var timePLeft = $("<p>")
     .addClass("time-static-p static-time-" + i)
     .text(i + ":00");
+  //This just keeps formatting the same. I felt it was important
   if (i === 9) {
     var timePLeft = $("<p>")
+      .addClass("time-static-p static-time-" + i)
       .text("0" + i + ":00");
   };
   var timeDivRight = $("<div>").addClass("scheduled-activity time-block");
@@ -28,6 +30,7 @@ for (var i = 9; i < 18; i++) {
   $(".time-list").append(timeLi);
 }
 
+//saves the schedule to local storage
 var saveSchedule = function () {
   for (i = 0; i < 9; i++) {
     scheduleSave[i] = document.getElementById("row" + i).textContent;
@@ -35,6 +38,7 @@ var saveSchedule = function () {
   localStorage.setItem("scheduleSave", JSON.stringify(scheduleSave));
 }
 
+//loads the schedule from local storage
 var loadSchedule = function () {
   scheduleSave = JSON.parse(localStorage.getItem("scheduleSave"));
   if (!scheduleSave) {
@@ -46,64 +50,56 @@ var loadSchedule = function () {
   }
 }
 
-
+//checks to see if things are upcoming or already passed. The present doesn't exist for long.
 function timeCheck() {
   $(".schedule-list").each(function () {
-    if ($(".time-static-p") < moment().format("HH") + ":" + moment().format("mm")) {
-      $(".schedule-list").addClass("past");
-    } else
-      if ($(".time-static-p") === moment().format("HH")) {
-        $(".schedule-list").addClass("present");
-      } else {
-        $(".schedule-list").addClass("future");
-      }
-
+    if ((this.outerText) < moment().format("HH") + ":" + moment().format("mm")) {
+      $(this).addClass("past");
+    }
+    if ((this.outerText) == moment().format("HH") + ":00") {
+      $(this).addClass("present");
+    }
+    if ((this.outerText) > moment().format("HH") + ":" + moment().format("mm")) {
+      $(this).addClass("future");
+    }
   });
 };
 
 timeCheck();
-
+//rechecks the time every 10 minutes
 setInterval(function () {
   timeCheck();
-}, 1800000);
+}, 600000);
 
 var idStorage;
-// task text was clicked
+//Allows clicking on the schedule boxes
 $(".scheduled-activity").on("click", "p", function () {
-  // get current text of p element
   var text = $(this)
     .text()
     .trim();
 
   idStorage = $(this).attr("id");
 
-  // replace p element with a new textarea
   var textInput = $("<textarea>").addClass("form-control").val(text);
   $(this).replaceWith(textInput);
-
-  // auto focus new element
   textInput.trigger("focus");
 });
 
-// editable field was un-focused
+//Moves the edit in the schedule onto the schedule
 $(".scheduled-activity").on("blur", "textarea", function () {
-  // get current value of textarea
   var textVal = $(this).val();
   console.log(textVal);
   var idTemp = (idStorage.replace("row", ""));
-  // update task in array and re-save to localstorage
   scheduleSave[idTemp] = textVal;
 
-  // recreate p element
   var scheduleP = $("<p>")
     .addClass("scheduled-todo")
     .attr("id", idStorage)
     .text(textVal);
-
-  // replace textarea with new content
   $(this).replaceWith(scheduleP);
-
+  //saves the schedule after alteration
   saveSchedule();
 });
 
+//initial load of the schedule
 loadSchedule();
